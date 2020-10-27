@@ -1,17 +1,23 @@
-name: "workflowr"
+name: "LPM"
 output_dir: ../docs
 navbar:
-  title: "workflowr"
+  title: "LPM"
   left:
-  - text: Home
+  - text: Contents
     href: index.html
-  - text: About
-    href: about.html
-  - text: License
-    href: license.html
+  - text: Preprocessing
+    href: 0-preprocessing.html
+  - text: Clustering
+    href: 1-clustering.html
+  - text: Annotation
+    href: 2-annotation.html
+  - text: hand2(+)-subset
+    href: 3-hand2.html
+  - text: Bloodvessel
+    href: 4-bloodvessel.html
 output:
   workflowr::wflow_html:
     toc: yes
     toc_float: yes
-    theme: cosmo
+    theme: simplex
     highlight: textmate

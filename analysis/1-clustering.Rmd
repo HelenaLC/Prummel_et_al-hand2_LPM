@@ -1,0 +1,175 @@
+---
+title: "Clustering"
+author: "Helena L. Crowell"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    code_folding: hide
+---
+
+```{r setup, include = FALSE}
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, cache.lazy = FALSE)
+```
+
+### Load packages
+
+```{r load-libs, message = FALSE, warning = FALSE}
+library(clustree)
+library(cowplot)
+library(dplyr)
+library(ggplot2)
+library(readxl)
+library(Seurat)
+library(SingleCellExperiment)
+```
+
+### Load data
+
+```{r load-data}
+sce <- readRDS(file.path("output", "sce_prep.rds"))
+source(file.path("code", "utils.R"))
+```
+
+# Clustering
+
+```{r Seurat, message = FALSE, fig.width = 5, fig.height = 3}
+# create `SeuratObject`
+so <- CreateSeuratObject(
+    counts = assay(sce, "counts"), project = "LPM",
+    min.cells = 10, min.features = 200,
+    meta.data = as.data.frame(colData(sce)))
+
+# normalize, find HVGs, scale & run PCA
+so <- NormalizeData(so)
+so <- FindVariableFeatures(so)
+so <- ScaleData(so, vars.to.regress = c("total", "altexps_mt_percent"))
+ElbowPlot(so <- RunPCA(so, features = VariableFeatures(so), seed.use = 42))
+
+# clustering
+so <- FindNeighbors(so, reduction = "pca", dims = seq_len(10))
+so <- FindClusters(so, 
+    resolution = seq(0.2, 2.4, 0.2),
+    verbose = FALSE, random.seed = 0)
+```
+
+### Nb. of clusters by resolution
+
+```{r fig.width = 5, fig.height = 3}
+ks <- grep("res.[0-9]", names(so@meta.data), value = TRUE)
+df <- data.frame(
+  res = as.numeric(gsub(".*res.(.*)", "\\1", ks)),
+  nk = vapply(so@meta.data[, ks], nlevels, numeric(1)))
+
+ggplot(df, aes(x = res, y = nk)) + 
+  geom_point() + 
+  scale_x_continuous(breaks = df$res) + 
+  scale_y_continuous(breaks = df$nk) +
+  labs(x = "resolution", y = "# of clusters") +
+  theme_bw() + theme(panel.grid.minor = element_blank())
+```
+
+### Clustering tree
+
+```{r clustree, fig.width = 10, fig.asp = 1}
+clustree(so@meta.data, prefix = "RNA_snn_res.")
+```
+
+# Dimension reduction
+
+```{r dr, message = FALSE, warning = FALSE, fig.width = 12, fig.height = 4}
+# set resolution to 1.8
+so$cluster_id <- Idents(so) <- so$RNA_snn_res.1.8
+
+# run UMAP & t-SNE
+so <- RunUMAP(so, reduction = "pca", dims = seq_len(10), seed.use = NULL)
+so <- RunTSNE(so, reduction = "pca", dims = seq_len(10), seed.use = NULL)
+
+# plot t-SNE & UMAP colored by cluster ID
+p1 <- UMAPPlot(so)
+p2 <- TSNEPlot(so)
+plot_grid(nrow = 1, rel_widths = c(3, 3, 2),
+    p1 + theme(legend.position = "none"), 
+    p2 + theme(legend.position = "none"),
+    get_legend(p1))
+```
+
+# Marker genes
+
+## Canonical marker genes
+
+```{r mgs1}
+mgs_canonical
+m <- match(mgs_canonical, rowData(sce)$symbol, nomatch = 0)
+gs <- rownames(sce)[m]
+```
+
+### Dot plot
+
+```{r dp1, fig.width = 10, fig.asp = 1/2}
+DotPlot(so, features = gs) + 
+    RotatedAxis() + coord_cartesian(clip = "off") +
+    theme(plot.margin = unit(c(0,0,0,4), "cm")) +
+    labs(x = NULL, y = NULL)
+```
+
+### Heatmap
+
+```{r hm1, fig.width = 12, fig.asp = 2/3}
+DoHeatmap(so, gs)
+```
+
+## DE analysis with `Seurat` 
+
+```{r mgs2}
+mgs <- FindAllMarkers(so, random.seed = 0, verbose = FALSE)
+gs <- group_by(mgs, cluster) %>% 
+    dplyr::slice(seq_len(4)) %>% 
+    pull("gene") %>% unique
+```
+
+### Dot plot
+
+```{r dp2, fig.width = 16, fig.asp = 2/3}
+DotPlot(so, features = gs) + 
+    RotatedAxis() + coord_cartesian(clip = "off") +
+    theme(plot.margin = unit(c(0,0,0,4), "cm")) +
+    labs(x = NULL, y = NULL)
+```
+
+### Heatmap
+
+```{r hm2, warning = FALSE, fig.width = 12, fig.asp = 2/3}
+DoHeatmap(so, gs)
+```
+
+### Save outputs
+
+```{r save}
+# propagate rowData from SCE to SeuratObject
+rd <- as.data.frame(rowData(sce)[rownames(so), ])
+so[["RNA"]]@meta.features <- cbind(rd, so[["RNA"]]@meta.features)
+
+# construct new SCE
+sce <- as.SingleCellExperiment(so)
+table(sce$cluster_id <- Idents(so))
+
+# write out files
+saveRDS(so, file.path("output", "so_clust.rds"))
+saveRDS(sce, file.path("output", "sce_clust.rds"))
+write.csv(mgs, file.path("output", "mgs_Seurat.csv"))
+```
+
+
+
+
+
+
+
+
+
+
+
+

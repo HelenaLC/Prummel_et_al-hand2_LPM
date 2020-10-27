@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Helena L. Crowell" />
+
+<meta name="date" content="2020-06-16" />
+
+<title>Annotation</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/simplex.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">LPM</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Contents</a>
+</li>
+<li>
+  <a href="0-preprocessing.html">Preprocessing</a>
+</li>
+<li>
+  <a href="1-clustering.html">Clustering</a>
+</li>
+<li>
+  <a href="2-annotation.html">Annotation</a>
+</li>
+<li>
+  <a href="3-hand2.html">hand2(+)-subset</a>
+</li>
+<li>
+  <a href="4-bloodvessel.html">Bloodvessel</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Annotation</h1>
+<h4 class="author">Helena L. Crowell</h4>
+<h4 class="date">June 16, 2020</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-06-16
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 2
+</p>
+<p>
+<strong>Knit directory:</strong> <code>workflowr/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20190529code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20190529)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20190529code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20190529)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongdetected"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>Cache:</strong> detected </a>
+</p>
+</div>
+<div id="strongCachestrongdetected" class="panel-collapse collapse">
+<div class="panel-body">
+The following chunks had caches available:
+<ul>
+<li>
+anno
+</li>
+<li>
+de-analysis
+</li>
+<li>
+dotplot
+</li>
+<li>
+hox-dimred
+</li>
+<li>
+hox-dotplot
+</li>
+<li>
+hox-load-data
+</li>
+<li>
+load-data
+</li>
+<li>
+load-libs
+</li>
+<li>
+merging
+</li>
+<li>
+mgs-heatmap
+</li>
+<li>
+session-info-chunk-inserted-by-workflowr
+</li>
+<li>
+umap-cluster_id
+</li>
+<li>
+umap-expr
+</li>
+<li>
+unnamed-chunk-1
+</li>
+<li>
+unnamed-chunk-2
+</li>
+<li>
+unnamed-chunk-3
+</li>
+<li>
+unnamed-chunk-4
+</li>
+<li>
+unnamed-chunk-5
+</li>
+<li>
+unnamed-chunk-6
+</li>
+<li>
+unnamed-chunk-7
+</li>
+<li>
+unnamed-chunk-8
+</li>
+<li>
+unnamed-chunk-9
+</li>
+</ul>
+<p>To ensure reproducibility of the results, delete the cache directory <code>2-annotation_cache</code> and re-run the analysis. To have workflowr automatically delete the cache directory prior to building the file, set <code>delete_cache = TRUE</code> when running <code>wflow_build()</code> or <code>wflow_publish()</code>.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong9289541"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> 9289541 </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrong9289541" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version 9289541. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/0-preprocessing_cache/
+    Ignored:    analysis/1-clustering_cache/
+    Ignored:    analysis/2-annotation_cache/
+    Ignored:    analysis/3-hand2_cache/
+    Ignored:    data/.DS_Store
+    Ignored:    output/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/0-preprocessing.Rmd
+    Untracked:  analysis/1-clustering.Rmd
+    Untracked:  analysis/2-annotation.Rmd
+    Untracked:  analysis/3-hand2.Rmd
+    Untracked:  analysis/4-bloodvessel.Rmd
+    Untracked:  code/Rehrauer18_heatmap.R
+    Untracked:  code/figures.R
+    Untracked:  code/make_tx2gene.R
+    Untracked:  code/summarize_zumis_counts.R
+    Untracked:  code/utils.R
+    Untracked:  data/Rehrauer18.csv
+    Untracked:  data/UMI_counts_merged.rds
+    Untracked:  data/cluster_anno.xlsx
+    Untracked:  data/cluster_anno_hand2.xlsx
+    Untracked:  data/figure requests.docx
+    Untracked:  data/hox_genes.txt
+    Untracked:  data/marker_genes.txt
+    Untracked:  data/marker_genes.xlsx
+    Untracked:  data/marker_genes_hand2.xlsx
+    Untracked:  data/markers_for_labels.xlsx
+    Untracked:  data/markers_hoxgenes.xlsx
+    Untracked:  data/~$cluster_anno.xlsx
+    Untracked:  data/~$gure requests.docx
+    Untracked:  data/~$marker_genes.xlsx
+    Untracked:  figures/
+    Untracked:  output/mgs_Seurat.csv
+    Untracked:  output/sce_anno.rds
+    Untracked:  output/sce_clust.rds
+    Untracked:  output/sce_prep.rds
+    Untracked:  output/so_anno.rds
+    Untracked:  output/so_clust.rds
+
+Unstaged changes:
+    Modified:   analysis/_site.yml
+    Modified:   analysis/index.Rmd
+    Deleted:    analysis/license.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-packages" class="section level3">
+<h3>Load packages</h3>
+<pre class="r"><code>library(circlize)
+library(ComplexHeatmap)
+library(cowplot)
+library(dplyr)
+library(ggplot2)
+library(readxl)
+library(reshape2)
+library(scater)
+library(scran)
+library(Seurat)
+library(SingleCellExperiment)
+library(tidyr)</code></pre>
+</div>
+<div id="load-data-metadata" class="section level3">
+<h3>Load data &amp; metadata</h3>
+<pre class="r"><code>sce &lt;- readRDS(file.path(&quot;output&quot;, &quot;sce_clust.rds&quot;))
+so &lt;- readRDS(file.path(&quot;output&quot;, &quot;so_clust.rds&quot;))
+nk &lt;- length(kids &lt;- levels(sce$cluster_id))
+source(file.path(&quot;code&quot;, &quot;utils.R&quot;))
+
+mgs_canonical</code></pre>
+<pre><code> [1] &quot;meox1&quot;   &quot;prrx1a&quot;  &quot;cxcl12a&quot; &quot;nkx2.5&quot;  &quot;nkx2.7&quot;  &quot;hey2&quot;    &quot;tal1&quot;   
+ [8] &quot;lmo2&quot;    &quot;etv2&quot;    &quot;znfl2a&quot;  &quot;pax2a&quot;   &quot;pax8&quot;    &quot;msx3&quot;    &quot;cdx4&quot;   
+[15] &quot;tbx20&quot;   &quot;gata2a&quot;  &quot;gata4&quot;   &quot;gata5&quot;   &quot;gata6&quot;   &quot;hand2&quot;   &quot;ttn.1&quot;  
+[22] &quot;ttn.2&quot;   &quot;fli1a&quot;   &quot;sox17&quot;   &quot;sox32&quot;   &quot;foxa2&quot;   &quot;foxa3&quot;   &quot;pitx2&quot;  
+[29] &quot;pitx3&quot;   &quot;lbx2&quot;    &quot;fsta&quot;    &quot;foxc1a&quot;  &quot;gsc&quot;     &quot;alx1&quot;    &quot;cyp26c1&quot;</code></pre>
+<pre class="r"><code>m &lt;- match(mgs_canonical, rowData(sce)$symbol)
+gs &lt;- rownames(sce)[m]
+gs &lt;- gs[!is.na(gs)]</code></pre>
+</div>
+<div id="cluster-annotation" class="section level3">
+<h3>Cluster annotation</h3>
+<pre class="r"><code># load cluster annotations
+anno &lt;- read_xlsx(file.path(&quot;data&quot;, &quot;cluster_anno.xlsx&quot;))
+anno &lt;- setNames(anno$label, anno$cluster_id)
+anno &lt;- anno[as.character(sce$cluster_id)]
+Idents(so) &lt;- sce$cluster_id &lt;- droplevels(
+    factor(anno, levels = names(cluster_pal)))</code></pre>
+</div>
+<div id="dimension-reduction" class="section level1">
+<h1>Dimension reduction</h1>
+<pre class="r"><code># scale expression between 0 and 1 using
+# (1%)- and (99%)-quantiles as boundaries
+es &lt;- .scale(logcounts(sce))
+
+# prep. data.frame of reduced dimensions, 
+# cell metadata, and expression for plotting
+dr &lt;- do.call(cbind, reducedDims(sce))
+df &lt;- data.frame(t(es), dr, colData(sce), 
+    i = seq_len(ncol(sce)), check.names = FALSE)
+df &lt;- df[sample(nrow(df), nrow(df)), ] # randomize cell ordering</code></pre>
+<div id="colored-by-cluster-id" class="section level2">
+<h2>Colored by cluster ID</h2>
+<pre class="r"><code># plot UMAP colored by cluster ID
+(p &lt;- ggplot(df, aes(x = UMAP_1, y = UMAP_2, col = cluster_id)) +
+    geom_point(size = 0.8, alpha = 0.8) + 
+    scale_color_manual(NULL, values = cluster_pal) + 
+    guides(color = guide_legend(override.aes = list(alpha = 1, size = 2))) +
+    theme_void() + theme(aspect.ratio = 1))</code></pre>
+<p><img src="figure/2-annotation.Rmd/umap-cluster_id-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="colored-by-expression" class="section level2">
+<h2>Colored by expression</h2>
+<pre class="r"><code>ps &lt;- lapply(gs, function(g) { df$expr &lt;- df[, g]
+    ggplot(df, aes(x = UMAP_1, y = UMAP_2, col = expr)) +
+        geom_point(size = 0.8, alpha = 0.8) + 
+        scale_color_viridis_c(NULL, option = &quot;C&quot;) +
+        ggtitle(g) + theme_void(base_size = 6) + 
+        theme(aspect.ratio = 1, legend.key.width = unit(2, &quot;mm&quot;))
+})
+plot_grid(plotlist = ps, ncol = 5)</code></pre>
+<p><img src="figure/2-annotation.Rmd/unnamed-chunk-2-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+</div>
+</div>
+<div id="canonical-marker-genes" class="section level1">
+<h1>Canonical marker genes</h1>
+<div id="dot-plot" class="section level2">
+<h2>Dot plot</h2>
+<pre class="r"><code>(p &lt;- .dotplot(so, gs))</code></pre>
+<p><img src="figure/2-annotation.Rmd/dotplot-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>p &lt;- p + scale_size_continuous(range = c(0, 3)) + 
+    theme_minimal(base_size = 8) + theme(
+        legend.key.size = unit(3, &quot;mm&quot;),
+        panel.grid = element_blank(),
+        axis.title = element_blank(),
+        axis.text = element_text(color = &quot;black&quot;),
+        axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+</div>
+</div>
+<div id="hox-genes" class="section level1">
+<h1>hox genes</h1>
+<pre class="r"><code>hox &lt;- read.table(
+    file.path(&quot;data&quot;, &quot;hox_genes.txt&quot;), 
+    colClasses = &quot;character&quot;)[[1]]
+
+m &lt;- match(hox, rowData(sce)$symbol)
+gs &lt;- rownames(sce)[m]</code></pre>
+<div id="dot-plot-1" class="section level2">
+<h2>Dot plot</h2>
+<pre class="r"><code>(p &lt;- .dotplot(so, gs))</code></pre>
+<p><img src="figure/2-annotation.Rmd/hox-dotplot-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dimension-reduction-1" class="section level2">
+<h2>Dimension reduction</h2>
+<pre class="r"><code>ps &lt;- lapply(gs, function(g) { df$expr &lt;- df[, g]
+    ggplot(df, aes(x = UMAP_1, y = UMAP_2, col = expr)) +
+        geom_point(size = 0.8, alpha = 0.8) + 
+        scale_color_viridis_c(NULL, option = &quot;C&quot;) +
+        ggtitle(g) + theme_void(base_size = 6) + 
+        theme(aspect.ratio = 1, legend.key.width = unit(2, &quot;mm&quot;))
+})
+plot_grid(plotlist = ps, ncol = 7)</code></pre>
+<p><img src="figure/2-annotation.Rmd/hox-dimred-1.png" width="1344" style="display: block; margin: auto;" /></p>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+</div>
+</div>
+<div id="hand2-marker-genes" class="section level1">
+<h1>hand2+ marker genes</h1>
+<div id="cluster-merging" class="section level2">
+<h2>Cluster merging</h2>
+<pre class="r"><code># merge into super-clusters
+old &lt;- levels(sce$cluster_id)
+ss &lt;- strsplit(old, &quot;_|-&quot;)
+new &lt;- sapply(ss, .subset, 1)
+m &lt;- match(sce$cluster_id, old)
+sce$merging_id &lt;- factor(new[m], unique(new))
+
+# exclude endoderm cluster
+sub &lt;- sce[, sce$merging_id != &quot;endoderm&quot;]
+sub$merging_id &lt;- droplevels(sub$merging_id)
+
+# construct color palette for merged clusters
+i &lt;- sapply(levels(sub$merging_id), grep, names(cluster_pal))
+i &lt;- sapply(i, function(u) u[ceiling(length(u)/2)])
+merging_pal &lt;- setNames(cluster_pal[i], levels(sub$merging_id))</code></pre>
+</div>
+<div id="de-analysis" class="section level2">
+<h2>DE analysis</h2>
+<pre class="r"><code># run DE analysis
+res &lt;- findMarkers(sub, sub$merging_id, pval.type = &quot;some&quot;)
+df &lt;- data.frame(res$hand2)
+
+# filter at FDR 5%, average logFC &gt; 0
+df &lt;- df[df$FDR &lt; 0.05, , drop = FALSE]
+df &lt;- df[df$summary.logFC &gt; 0, , drop = FALSE]
+df &lt;- top_n(df, 50, summary.logFC)
+df$gene &lt;- rownames(df)
+m &lt;- match(df$gene, rownames(sce))
+df$symbol &lt;- rowData(sce)$symbol[m]
+length(mgs &lt;- df$gene)</code></pre>
+<pre><code>[1] 50</code></pre>
+</div>
+<div id="heatmap" class="section level2">
+<h2>Heatmap</h2>
+<pre class="r"><code># compute mean expression by cluster
+names(mids) &lt;- mids &lt;- levels(sub$merging_id)
+cs &lt;- split(seq_len(ncol(sub)), sub$merging_id)
+ms &lt;- lapply(mids, function(m) 
+    rowMeans(logcounts(sub[mgs, cs[[m]]])))
+
+# use gene symbols as names
+mat &lt;- scale(t(do.call(cbind, ms)))
+m &lt;- match(mgs, df$gene)
+colnames(mat) &lt;- ifelse(
+    df$symbol[m] == &quot;&quot; | is.na(df$symbol[m]), 
+    df$gene[m], df$symbol[m])
+
+# construct row annotation
+row_anno &lt;- rowAnnotation(
+    simple_anno_size = unit(3.5, &quot;mm&quot;),
+    df = data.frame(merging_id = mids),
+    col = list(merging_id = merging_pal),
+    show_legend = FALSE,
+    gp = gpar(col = &quot;white&quot;),
+    show_annotation_name = FALSE,
+    annotation_legend_param = list(
+        title_gp = gpar(fontsize = 8),
+        labels_gp = gpar(fontsize = 6)))
+
+# specify heatmap color function
+rng &lt;- max(abs(range(mat, na.rm = TRUE)))
+rng &lt;- ceiling(rng*0.5)/0.5
+hm_pal &lt;- c(&quot;navy&quot;, &quot;royalblue&quot;, &quot;grey95&quot;, &quot;yellowgreen&quot;, &quot;darkgreen&quot;)
+hm_pal &lt;- colorRamp2(seq(-rng, rng, l = 5), hm_pal)
+
+(hm &lt;- Heatmap(mat,
+    col = hm_pal,
+    cluster_rows = FALSE,
+    cluster_columns = FALSE,
+    row_names_side = &quot;left&quot;,
+    rect_gp = gpar(col = &quot;white&quot;),
+    heatmap_legend_param = list(
+        title = &quot;scaled mean\nexpression&quot;,
+        title_gp = gpar(fontsize = 8),
+        labels_gp = gpar(fontsize = 6)),
+    column_split = df$cluster,
+    row_title = NULL,
+    column_title = NULL,
+    left_annotation = row_anno,
+    row_names_gp = gpar(fontsize = 8),
+    column_names_gp = gpar(fontsize = 8)))</code></pre>
+<p><img src="figure/2-annotation.Rmd/mgs-heatmap-1.png" width="960" style="display: block; margin: auto;" /></p>
+<div id="save-outputs" class="section level3">
+<h3>Save outputs</h3>
+<pre class="r"><code>so &lt;- AddMetaData(so, sce$cluster_id, &quot;cluster_id&quot;) 
+saveRDS(so, file.path(&quot;output&quot;, &quot;so_anno.rds&quot;))
+saveRDS(sce, file.path(&quot;output&quot;, &quot;sce_anno.rds&quot;))</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.0.0 RC (2020-04-21 r78267)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Catalina 10.15.5
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+ [1] parallel  stats4    grid      stats     graphics  grDevices utils    
+ [8] datasets  methods   base     
+
+other attached packages:
+ [1] RColorBrewer_1.1-2          tidyr_1.1.0                
+ [3] Seurat_3.1.5                scran_1.16.0               
+ [5] scater_1.16.1               SingleCellExperiment_1.10.1
+ [7] SummarizedExperiment_1.18.1 DelayedArray_0.14.0        
+ [9] matrixStats_0.56.0          Biobase_2.48.0             
+[11] GenomicRanges_1.40.0        GenomeInfoDb_1.24.0        
+[13] IRanges_2.22.2              S4Vectors_0.26.1           
+[15] BiocGenerics_0.34.0         reshape2_1.4.4             
+[17] readxl_1.3.1                ggplot2_3.3.1              
+[19] dplyr_1.0.0                 cowplot_1.0.0              
+[21] ComplexHeatmap_2.4.2        circlize_0.4.10            
+[23] workflowr_1.6.2            
+
+loaded via a namespace (and not attached):
+  [1] Rtsne_0.15                ggbeeswarm_0.6.0         
+  [3] colorspace_1.4-1          rjson_0.2.20             
+  [5] ellipsis_0.3.1            ggridges_0.5.2           
+  [7] rprojroot_1.3-2           XVector_0.28.0           
+  [9] GlobalOptions_0.1.2       BiocNeighbors_1.6.0      
+ [11] fs_1.4.1                  clue_0.3-57              
+ [13] farver_2.0.3              leiden_0.3.3             
+ [15] listenv_0.8.0             ggrepel_0.8.2            
+ [17] codetools_0.2-16          splines_4.0.0            
+ [19] knitr_1.28                jsonlite_1.6.1           
+ [21] ica_1.0-2                 cluster_2.1.0            
+ [23] png_0.1-7                 uwot_0.1.8               
+ [25] sctransform_0.2.1         compiler_4.0.0           
+ [27] httr_1.4.1                dqrng_0.2.1              
+ [29] backports_1.1.7           lazyeval_0.2.2           
+ [31] Matrix_1.2-18             limma_3.44.3             
+ [33] later_1.1.0.1             BiocSingular_1.4.0       
+ [35] htmltools_0.4.0           tools_4.0.0              
+ [37] rsvd_1.0.3                igraph_1.2.5             
+ [39] gtable_0.3.0              glue_1.4.1               
+ [41] GenomeInfoDbData_1.2.3    RANN_2.6.1               
+ [43] Rcpp_1.0.4.6              cellranger_1.1.0         
+ [45] vctrs_0.3.1               ape_5.4                  
+ [47] nlme_3.1-148              DelayedMatrixStats_1.10.0
+ [49] lmtest_0.9-37             xfun_0.14                
+ [51] stringr_1.4.0             globals_0.12.5           
+ [53] lifecycle_0.2.0           irlba_2.3.3              
+ [55] statmod_1.4.34            future_1.17.0            
+ [57] edgeR_3.30.3              zoo_1.8-8                
+ [59] zlibbioc_1.34.0           MASS_7.3-51.6            
+ [61] scales_1.1.1              promises_1.1.1           
+ [63] yaml_2.2.1                pbapply_1.4-2            
+ [65] reticulate_1.16           gridExtra_2.3            
+ [67] stringi_1.4.6             BiocParallel_1.22.0      
+ [69] shape_1.4.4               rlang_0.4.6              
+ [71] pkgconfig_2.0.3           bitops_1.0-6             
+ [73] evaluate_0.14             lattice_0.20-41          
+ [75] ROCR_1.0-11               purrr_0.3.4              
+ [77] labeling_0.3              htmlwidgets_1.5.1        
+ [79] patchwork_1.0.0           tidyselect_1.1.0         
+ [81] RcppAnnoy_0.0.16          plyr_1.8.6               
+ [83] magrittr_1.5              R6_2.4.1                 
+ [85] generics_0.0.2            pillar_1.4.4             
+ [87] withr_2.2.0               fitdistrplus_1.1-1       
+ [89] survival_3.2-3            RCurl_1.98-1.2           
+ [91] tsne_0.1-3                tibble_3.0.1             
+ [93] future.apply_1.5.0        crayon_1.3.4             
+ [95] KernSmooth_2.23-17        plotly_4.9.2.1           
+ [97] rmarkdown_2.2             viridis_0.5.1            
+ [99] GetoptLong_1.0.0          locfit_1.5-9.4           
+[101] data.table_1.12.8         git2r_0.27.1             
+[103] digest_0.6.25             httpuv_1.5.4             
+[105] munsell_0.5.0             beeswarm_0.2.3           
+[107] viridisLite_0.3.0         vipor_0.4.5              </code></pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,11 +1,35 @@
 ---
-title: "Home"
+title: "Contents"
 site: workflowr::wflow_site
 output:
   workflowr::wflow_html:
     toc: false
-editor_options:
-  chunk_output_type: console
 ---
 
-Welcome to my research website.
+- [Preprocessing](0-preprocessing.html):
+    - Calculation of QC metrics & outlier removal using `scater`
+    - Filtering of genes and cells
+    
+- [Clustering](1-clustering.html):
+    - `Seurat` clustering using a sequence of resolutions
+    - Number of clusters by resolution
+    - t-SNE and UMAP dimension reductions 
+    - Identification of marker genes
+    
+- [Annotation](2-annotation.html):
+    - Dimension reductions colored by cluster ID
+    - UMAPs colored by marker gene expression
+    - Dot plot & heatmap of `Seurat` & canonical markers
+    - DE analysis on merged hand2+
+    
+- [Hand2(+)-subset](3-hand2.html)
+    - Re-clustering of hand2(+)-subset
+    - Dot plots of canonical & `Seurat` markers
+    - Violin plots of `Seurat` markers
+    - t-SNE and UMAP dimension reductions
+    - Classification tree
+    
+- [Bloodvessel](4-bloodvessel.html)
+    - Re-clustering of bloodvessel-subset
+    - PCA and UMAP dimension reductions
+    - Dot plot & violins of cannonical markers
