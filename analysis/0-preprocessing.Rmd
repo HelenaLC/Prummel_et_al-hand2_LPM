@@ -2,11 +2,6 @@
 title: "Preprocessing"
 author: "Helena L. Crowell"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
-output: 
-  html_document:
-    toc: true
-    toc_depth: 2
-    code_folding: hide
 ---
 
 ```{r setup, include = FALSE}
@@ -14,9 +9,11 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, cache.lazy = FALSE)
 ```
 
-### Load packages
+# Preamble
 
-```{r message = FALSE, warning = FALSE}
+## Load packages
+
+```{r load-libs, message = FALSE, warning = FALSE}
 library(biomaRt)
 library(dplyr)
 library(scater)
@@ -24,17 +21,15 @@ library(scran)
 library(SingleCellExperiment)
 ```
 
-# Data preparation
-
 ## Load data
 
-```{r}
+```{r load-data, message = FALSE, warning = FALSE}
 counts <- readRDS(file.path("data", "UMI_counts_merged.rds"))
 ```
 
 ## Construct SCE
 
-```{r}
+```{r make-sce}
 ss <- strsplit(colnames(counts), "_")
 pids <- vapply(ss, .subset, i = 1, character(1))
 cd <- DataFrame(plate_id = pids, row.names = colnames(counts))
@@ -44,11 +39,11 @@ cd <- DataFrame(plate_id = pids, row.names = colnames(counts))
     colData = cd))
 ```
 
-# Filtering & quality control
+# QC & filtering
 
-## Get gene symbols from Ensembl
+## Get gene symbols
 
-```{r}
+```{r get-symbols}
 ensembl <- useMart("ensembl", 
     dataset = "drerio_gene_ensembl",
     host = "dec2017.archive.ensembl.org")
@@ -57,7 +52,7 @@ map <- getBM(
     attributes = c("ensembl_gene_id", "zfin_id_symbol", "chromosome_name"),
     filter = "ensembl_gene_id", value = rownames(sce), mart = ensembl)
 
-# check that all genes are annoted in Ensembl
+# check that all genes are annotated
 setdiff(rownames(sce), map$ensembl_gene_id)
 
 # replace problematic characters
@@ -68,29 +63,34 @@ m <- match(rownames(sce), map$ensembl_gene_id)
 s <- map$zfin_id_symbol[m]
 rownames(sce) <- paste(rownames(sce), s, sep = ":")
 rowData(sce)$symbol <- s
+```
 
-# get MT genes as controls
+## Get MT genes
+
+```{r get-mito}
 mt <- map$chromosome_name == "MT"
 mt <- rownames(sce)[mt[m]]
 (mt <- mt[!is.na(mt)])
+# set MT genes as controls
 altExp(sce, "mt") <- sce[mt, ]
 ```
 
 ## Compute QC metrics
 
-```{r, fig.width = 6, fig.height = 4}
-# exclude undetected genes
+```{r calc-qc, fig.width = 6, fig.height = 4}
+# drop undetected genes
 sce <- sce[rowSums(counts(sce) > 0) > 0, ]
 
-# calculate QC metrics
+# calculate feature- & cell-level QC metrics
 sce <- addPerFeatureQC(sce)
 sce <- addPerCellQC(sce)
 ```
 
-## Filter outlier cells
+## Filter outliers
 
-```{r}
-sce$ol <- isOutlier(sce$detected, nmads = 2, type = "both", log = TRUE)
+```{r fil-ols, fig.width = 5, fig.height = 3}
+table(sce$ol <- isOutlier(sce$detected, 
+    nmads = 2, type = "both", log = TRUE))
 
 as.data.frame(colData(sce)) %>% 
     ggplot(aes(x = detected, alpha = ol)) + 
@@ -105,7 +105,7 @@ table(sce$plate_id)
 
 ### Total features vs. %(MT)
 
-```{r, fig.width = 6, fig.height = 4}
+```{r fig.width = 5, fig.height = 3}
 fix_lgd <- guides(fill = guide_legend(
   override.aes = list(size = 3, alpha = 1)))
 plotColData(sce, 
@@ -116,21 +116,21 @@ plotColData(sce,
 
 ### Distributions of %(MT) by plate
 
-```{r, fig.width = 6, fig.height = 4}
+```{r fig.width = 5, fig.height = 3}
 plotColData(sce, x = "plate_id", y = "altexps_mt_percent", 
     colour_by = "plate_id", show_median  = TRUE) + fix_lgd
 ```
 
 ### Highest expressing features
 
-```{r, fig.width = 6, fig.height = 4}
+```{r fig.width = 6, fig.height = 4}
 plotHighestExprs(sce, colour_cells_by = "detected")
 ```
 
 ## Normalization
 
 ```{r}
-# compute log-normalized counts
+# compute log-normalized counts using MT genes as controls
 sce <- sce[rowSums(counts(sce) > 1) >= 10, ]
 sce <- computeSumFactors(sce)
 sce <- computeSpikeFactors(sce, "mt")
@@ -143,14 +143,14 @@ sce <- logNormCounts(sce)
 rowData(sce)$mean_expr <- rowMeans(logcounts(sce))
 rowData(sce)$is_mt <- rownames(sce) %in% mt
 plotRowData(sce, x = "mean_expr", y = "detected", colour_by = "is_mt") +
-  geom_hline(yintercept = 50, lty = 2) +
-  geom_text(x = 5, y = 45, label = paste(
-    sum(rowData(sce)$detected >= 50),
-    "genes expressed in at least 50% of cells")) +
-  geom_hline(yintercept = 25, lty = 3) +
-  geom_text(x = 5, y = 20, label = paste(
-    sum(rowData(sce)$detected >= 25),
-    "genes expressed in at least 25% of cells")) + fix_lgd
+    geom_hline(yintercept = 50, lty = 2) +
+    geom_text(x = 5, y = 45, label = paste(
+        sum(rowData(sce)$detected >= 50),
+        "genes expressed ≥ 50% of cells")) +
+    geom_hline(yintercept = 25, lty = 3) +
+    geom_text(x = 5, y = 20, label = paste(
+        sum(rowData(sce)$detected >= 25),
+        "genes expressed ≥ 25% of cells")) + fix_lgd
 ```
 
 # Dimension reduction
@@ -163,7 +163,7 @@ sce <- runTSNE(sce)
 
 ## PCA colored by plate ID & library size
 
-```{r pca, fig.width = 12, fig.height = 5}
+```{r pca, fig.width = 10, fig.height = 4}
 sce$log10_total <- log10(sce$total + 1)
 multiplot(cols = 2,
     plotPCA(sce, colour_by = "plate_id") + fix_lgd,
@@ -172,24 +172,26 @@ multiplot(cols = 2,
 
 ## t-SNE colored by plate ID & %(MT)
 
-```{r tsne, fig.width = 12, fig.height = 5}
+```{r tsne, fig.width = 10, fig.height = 4}
 multiplot(cols = 2,
     plotTSNE(sce, colour_by = "plate_id") + fix_lgd,
     plotTSNE(sce, colour_by = "altexps_mt_percent") + fix_lgd)
 ```
 
-# Write SCE to .rds
+# Save data
 
-### mCherry expression
+## mCherry expression
 
-```{r fig.width = 6, fig.height = 4}
+```{r fig.width = 5, fig.height = 3}
 plotExpression(sce, 
     features = "drl-mCherry:NA", x = "plate_id", 
     colour_by = "plate_id", show_median = TRUE) + fix_lgd
 ```
 
+## Write SCE to .rds
+
 ```{r}
-# exlude plate 4 as it seems to be of low quality
+# exclude low-quality plate 4
 sce <- sce[, sce$plate_id != "SN4"]
-saveRDS(sce, file.path("output", "sce_prep.rds"))
+saveRDS(sce, file.path("output", "0-sce_prep.rds"))
 ```

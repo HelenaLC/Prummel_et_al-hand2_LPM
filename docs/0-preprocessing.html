@@ -11,7 +11,7 @@
 
 <meta name="author" content="Helena L. Crowell" />
 
-<meta name="date" content="2020-06-16" />
+<meta name="date" content="2020-10-28" />
 
 <title>Preprocessing</title>
 
@@ -25,8 +25,11 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -35,6 +38,15 @@ div.section {
   padding-top: 12px;
 }
 </style>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -258,6 +270,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -353,14 +368,11 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">LPM</a>
+      <a class="navbar-brand" href="index.html">Contents</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">Contents</a>
-</li>
-<li>
   <a href="0-preprocessing.html">Preprocessing</a>
 </li>
 <li>
@@ -368,12 +380,6 @@ div.tocify {
 </li>
 <li>
   <a href="2-annotation.html">Annotation</a>
-</li>
-<li>
-  <a href="3-hand2.html">hand2(+)-subset</a>
-</li>
-<li>
-  <a href="4-bloodvessel.html">Bloodvessel</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -385,11 +391,19 @@ div.tocify {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Preprocessing</h1>
 <h4 class="author">Helena L. Crowell</h4>
-<h4 class="date">June 16, 2020</h4>
+<h4 class="date">October 28, 2020</h4>
 
 </div>
 
@@ -414,10 +428,10 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-06-16
+<strong>Last updated:</strong> 2020-10-28
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 2
 </p>
 <p>
 <strong>Knit directory:</strong> <code>workflowr/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -438,7 +452,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -481,12 +495,66 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongdetected"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>Cache:</strong> detected </a>
 </p>
 </div>
-<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div id="strongCachestrongdetected" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+The following chunks had caches available:
+<ul>
+<li>
+pca
+</li>
+<li>
+session-info-chunk-inserted-by-workflowr
+</li>
+<li>
+tsne
+</li>
+<li>
+unnamed-chunk-1
+</li>
+<li>
+unnamed-chunk-10
+</li>
+<li>
+unnamed-chunk-11
+</li>
+<li>
+unnamed-chunk-12
+</li>
+<li>
+unnamed-chunk-13
+</li>
+<li>
+unnamed-chunk-14
+</li>
+<li>
+unnamed-chunk-2
+</li>
+<li>
+unnamed-chunk-3
+</li>
+<li>
+unnamed-chunk-4
+</li>
+<li>
+unnamed-chunk-5
+</li>
+<li>
+unnamed-chunk-6
+</li>
+<li>
+unnamed-chunk-7
+</li>
+<li>
+unnamed-chunk-8
+</li>
+<li>
+unnamed-chunk-9
+</li>
+</ul>
+<p>To ensure reproducibility of the results, delete the cache directory <code>0-preprocessing_cache</code> and re-run the analysis. To have workflowr automatically delete the cache directory prior to building the file, set <code>delete_cache = TRUE</code> when running <code>wflow_build()</code> or <code>wflow_publish()</code>.</p>
 </div>
 </div>
 </div>
@@ -505,16 +573,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong9289541"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> 9289541 </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomHelenaLCPummeletalhand2LPMtree0d9a9aa1a2cca9f211b98432e1fb1b4578df1a39targetblank0d9a9aaa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/HelenaLC/Pummel_et_al-hand2_LPM/tree/0d9a9aa1a2cca9f211b98432e1fb1b4578df1a39" target="_blank">0d9a9aa</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong9289541" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomHelenaLCPummeletalhand2LPMtree0d9a9aa1a2cca9f211b98432e1fb1b4578df1a39targetblank0d9a9aaa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 9289541. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/HelenaLC/Pummel_et_al-hand2_LPM/tree/0d9a9aa1a2cca9f211b98432e1fb1b4578df1a39" target="_blank">0d9a9aa</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -522,47 +590,42 @@ Note that you need to be careful to ensure that all relevant files for the analy
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+    Ignored:    README.html
     Ignored:    analysis/.DS_Store
+    Ignored:    analysis/0-preprocessing_cache/
+    Ignored:    analysis/1-clustering_cache/
+    Ignored:    analysis/2-annotation_cache/
+    Ignored:    backup/
     Ignored:    data/.DS_Store
+    Ignored:    data/Rehrauer18.csv
+    Ignored:    data/UMI_counts_merged.rds
+    Ignored:    data/cluster_anno.xlsx
+    Ignored:    data/cluster_anno_hand2.xlsx
+    Ignored:    data/figure requests.docx
+    Ignored:    data/hox_genes.txt
+    Ignored:    data/marker_genes.txt
+    Ignored:    data/marker_genes.xlsx
+    Ignored:    data/marker_genes_hand2.xlsx
+    Ignored:    data/markers_for_labels.xlsx
+    Ignored:    data/markers_hoxgenes.xlsx
+    Ignored:    data/~$cluster_anno.xlsx
+    Ignored:    data/~$gure requests.docx
+    Ignored:    data/~$marker_genes.xlsx
+    Ignored:    figures/
     Ignored:    output/.DS_Store
-
-Untracked files:
-    Untracked:  analysis/0-preprocessing.Rmd
-    Untracked:  analysis/1-clustering.Rmd
-    Untracked:  analysis/2-annotation.Rmd
-    Untracked:  analysis/3-hand2.Rmd
-    Untracked:  analysis/4-bloodvessel.Rmd
-    Untracked:  code/Rehrauer18_heatmap.R
-    Untracked:  code/figures.R
-    Untracked:  code/make_tx2gene.R
-    Untracked:  code/summarize_zumis_counts.R
-    Untracked:  code/utils.R
-    Untracked:  data/Rehrauer18.csv
-    Untracked:  data/UMI_counts_merged.rds
-    Untracked:  data/cluster_anno.xlsx
-    Untracked:  data/cluster_anno_hand2.xlsx
-    Untracked:  data/figure requests.docx
-    Untracked:  data/hox_genes.txt
-    Untracked:  data/marker_genes.txt
-    Untracked:  data/marker_genes.xlsx
-    Untracked:  data/marker_genes_hand2.xlsx
-    Untracked:  data/markers_for_labels.xlsx
-    Untracked:  data/markers_hoxgenes.xlsx
-    Untracked:  data/~$cluster_anno.xlsx
-    Untracked:  data/~$gure requests.docx
-    Untracked:  data/~$marker_genes.xlsx
-    Untracked:  figures/
-    Untracked:  output/mgs_Seurat.csv
-    Untracked:  output/sce_anno.rds
-    Untracked:  output/sce_clust.rds
-    Untracked:  output/sce_prep.rds
-    Untracked:  output/so_anno.rds
-    Untracked:  output/so_clust.rds
+    Ignored:    output/mgs_Seurat.csv
+    Ignored:    output/sce_anno.rds
+    Ignored:    output/sce_clust.rds
+    Ignored:    output/sce_prep.rds
+    Ignored:    output/so_anno.rds
+    Ignored:    output/so_clust.rds
 
 Unstaged changes:
+    Modified:   .gitignore
+    Modified:   analysis/0-preprocessing.Rmd
+    Deleted:    analysis/3-hand2.Rmd
+    Deleted:    analysis/4-bloodvessel.Rmd
     Modified:   analysis/_site.yml
-    Modified:   analysis/index.Rmd
-    Deleted:    analysis/license.Rmd
 
 </code></pre>
 <p>
@@ -575,9 +638,69 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/0-preprocessing.Rmd</code>) and HTML (<code>docs/0-preprocessing.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/HelenaLC/Pummel_et_al-hand2_LPM/blob/b048d4d6ffdc4e257b2ed6ddbbea0652e0f0f38b/analysis/0-preprocessing.Rmd" target="_blank">b048d4d</a>
+</td>
+<td>
+HelenaLC
+</td>
+<td>
+2020-10-27
+</td>
+<td>
+initial commit
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/HelenaLC/Pummel_et_al-hand2_LPM/b048d4d6ffdc4e257b2ed6ddbbea0652e0f0f38b/docs/0-preprocessing.html" target="_blank">b048d4d</a>
+</td>
+<td>
+HelenaLC
+</td>
+<td>
+2020-10-27
+</td>
+<td>
+initial commit
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -618,10 +741,10 @@ reducedDimNames(0):
 altExpNames(0):</code></pre>
 </div>
 </div>
-<div id="filtering-quality-control" class="section level1">
-<h1>Filtering &amp; quality control</h1>
-<div id="get-gene-symbols-from-ensembl" class="section level2">
-<h2>Get gene symbols from Ensembl</h2>
+<div id="qc-filtering" class="section level1">
+<h1>QC &amp; filtering</h1>
+<div id="get-gene-symbols" class="section level2">
+<h2>Get gene symbols</h2>
 <pre class="r"><code>ensembl &lt;- useMart(&quot;ensembl&quot;, 
     dataset = &quot;drerio_gene_ensembl&quot;,
     host = &quot;dec2017.archive.ensembl.org&quot;)
@@ -630,7 +753,7 @@ map &lt;- getBM(
     attributes = c(&quot;ensembl_gene_id&quot;, &quot;zfin_id_symbol&quot;, &quot;chromosome_name&quot;),
     filter = &quot;ensembl_gene_id&quot;, value = rownames(sce), mart = ensembl)
 
-# check that all genes are annoted in Ensembl
+# check that all genes are annotated
 setdiff(rownames(sce), map$ensembl_gene_id)</code></pre>
 <pre><code>[1] &quot;drl_mCherry&quot;</code></pre>
 <pre class="r"><code># replace problematic characters
@@ -640,10 +763,11 @@ rownames(sce) &lt;- gsub(&quot;_&quot;, &quot;-&quot;, rownames(sce))
 m &lt;- match(rownames(sce), map$ensembl_gene_id)
 s &lt;- map$zfin_id_symbol[m]
 rownames(sce) &lt;- paste(rownames(sce), s, sep = &quot;:&quot;)
-rowData(sce)$symbol &lt;- s
-
-# get MT genes as controls
-mt &lt;- map$chromosome_name == &quot;MT&quot;
+rowData(sce)$symbol &lt;- s</code></pre>
+</div>
+<div id="get-mt-genes" class="section level2">
+<h2>Get MT genes</h2>
+<pre class="r"><code>mt &lt;- map$chromosome_name == &quot;MT&quot;
 mt &lt;- rownames(sce)[mt[m]]
 (mt &lt;- mt[!is.na(mt)])</code></pre>
 <pre><code> [1] &quot;ENSDARG00000063895:mt-nd1&quot;  &quot;ENSDARG00000063899:mt-nd2&quot; 
@@ -666,22 +790,61 @@ mt &lt;- rownames(sce)[mt[m]]
 </div>
 <div id="compute-qc-metrics" class="section level2">
 <h2>Compute QC metrics</h2>
-<pre class="r"><code># exclude undetected genes
+<pre class="r"><code># drop undetected genes
 sce &lt;- sce[rowSums(counts(sce) &gt; 0) &gt; 0, ]
 
-# calculate QC metrics
+# calculate feature- &amp; cell-level QC metrics
 sce &lt;- addPerFeatureQC(sce)
 sce &lt;- addPerCellQC(sce)</code></pre>
 </div>
-<div id="filter-outlier-cells" class="section level2">
-<h2>Filter outlier cells</h2>
-<pre class="r"><code>sce$ol &lt;- isOutlier(sce$detected, nmads = 2, type = &quot;both&quot;, log = TRUE)
-
-as.data.frame(colData(sce)) %&gt;% 
+<div id="filter-outliers" class="section level2">
+<h2>Filter outliers</h2>
+<pre class="r"><code>table(sce$ol &lt;- isOutlier(sce$detected, nmads = 2, type = &quot;both&quot;, log = TRUE))</code></pre>
+<pre><code>
+FALSE  TRUE 
+ 1326   194 </code></pre>
+<pre class="r"><code>as.data.frame(colData(sce)) %&gt;% 
     ggplot(aes(x = detected, alpha = ol)) + 
         scale_alpha_manual(values = c(&quot;TRUE&quot; = 0.2, &quot;FALSE&quot; = 0.8)) +
         geom_histogram(bins = 100) + theme_bw()</code></pre>
-<p><img src="figure/0-preprocessing.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/0-preprocessing.Rmd/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HelenaLC/Pummel_et_al-hand2_LPM/blob/b048d4d6ffdc4e257b2ed6ddbbea0652e0f0f38b/docs/figure/0-preprocessing.Rmd/unnamed-chunk-7-1.png" target="_blank">b048d4d</a>
+</td>
+<td>
+HelenaLC
+</td>
+<td>
+2020-10-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>sce &lt;- sce[, !sce$ol]
 table(sce$plate_id)</code></pre>
 <pre><code>
@@ -698,23 +861,97 @@ plotColData(sce,
     x = &quot;detected&quot;, y = &quot;altexps_mt_percent&quot;, 
     colour_by = &quot;plate_id&quot;, point_alpha = 0.8) + 
     scale_x_log10() + fix_lgd</code></pre>
-<p><img src="figure/0-preprocessing.Rmd/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="figure/0-preprocessing.Rmd/unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HelenaLC/Pummel_et_al-hand2_LPM/blob/b048d4d6ffdc4e257b2ed6ddbbea0652e0f0f38b/docs/figure/0-preprocessing.Rmd/unnamed-chunk-8-1.png" target="_blank">b048d4d</a>
+</td>
+<td>
+HelenaLC
+</td>
+<td>
+2020-10-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="distributions-of-mt-by-plate" class="section level3">
 <h3>Distributions of %(MT) by plate</h3>
 <pre class="r"><code>plotColData(sce, x = &quot;plate_id&quot;, y = &quot;altexps_mt_percent&quot;, 
     colour_by = &quot;plate_id&quot;, show_median  = TRUE) + fix_lgd</code></pre>
-<p><img src="figure/0-preprocessing.Rmd/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="figure/0-preprocessing.Rmd/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HelenaLC/Pummel_et_al-hand2_LPM/blob/b048d4d6ffdc4e257b2ed6ddbbea0652e0f0f38b/docs/figure/0-preprocessing.Rmd/unnamed-chunk-9-1.png" target="_blank">b048d4d</a>
+</td>
+<td>
+HelenaLC
+</td>
+<td>
+2020-10-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="highest-expressing-features" class="section level3">
 <h3>Highest expressing features</h3>
 <pre class="r"><code>plotHighestExprs(sce, colour_cells_by = &quot;detected&quot;)</code></pre>
-<p><img src="figure/0-preprocessing.Rmd/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="figure/0-preprocessing.Rmd/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="normalization" class="section level2">
 <h2>Normalization</h2>
-<pre class="r"><code># compute log-normalized counts
+<pre class="r"><code># compute log-normalized counts using MT genes as controls
 sce &lt;- sce[rowSums(counts(sce) &gt; 1) &gt;= 10, ]
 sce &lt;- computeSumFactors(sce)
 sce &lt;- computeSpikeFactors(sce, &quot;mt&quot;)
@@ -724,15 +961,15 @@ sce &lt;- logNormCounts(sce)</code></pre>
 <pre class="r"><code>rowData(sce)$mean_expr &lt;- rowMeans(logcounts(sce))
 rowData(sce)$is_mt &lt;- rownames(sce) %in% mt
 plotRowData(sce, x = &quot;mean_expr&quot;, y = &quot;detected&quot;, colour_by = &quot;is_mt&quot;) +
-  geom_hline(yintercept = 50, lty = 2) +
-  geom_text(x = 5, y = 45, label = paste(
-    sum(rowData(sce)$detected &gt;= 50),
-    &quot;genes expressed in at least 50% of cells&quot;)) +
-  geom_hline(yintercept = 25, lty = 3) +
-  geom_text(x = 5, y = 20, label = paste(
-    sum(rowData(sce)$detected &gt;= 25),
-    &quot;genes expressed in at least 25% of cells&quot;)) + fix_lgd</code></pre>
-<p><img src="figure/0-preprocessing.Rmd/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;" /></p>
+    geom_hline(yintercept = 50, lty = 2) +
+    geom_text(x = 5, y = 45, label = paste(
+        sum(rowData(sce)$detected &gt;= 50),
+        &quot;genes expressed ≥ 50% of cells&quot;)) +
+    geom_hline(yintercept = 25, lty = 3) +
+    geom_text(x = 5, y = 20, label = paste(
+        sum(rowData(sce)$detected &gt;= 25),
+        &quot;genes expressed ≥ 25% of cells&quot;)) + fix_lgd</code></pre>
+<p><img src="figure/0-preprocessing.Rmd/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 </div>
@@ -747,27 +984,104 @@ sce &lt;- runTSNE(sce)</code></pre>
 multiplot(cols = 2,
     plotPCA(sce, colour_by = &quot;plate_id&quot;) + fix_lgd,
     plotPCA(sce, colour_by = &quot;log10_total&quot;) + fix_lgd)</code></pre>
-<p><img src="figure/0-preprocessing.Rmd/pca-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p><img src="figure/0-preprocessing.Rmd/pca-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pca-1">
+Past versions of pca-1.png
+</button>
+</p>
+<div id="fig-pca-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HelenaLC/Pummel_et_al-hand2_LPM/blob/b048d4d6ffdc4e257b2ed6ddbbea0652e0f0f38b/docs/figure/0-preprocessing.Rmd/pca-1.png" target="_blank">b048d4d</a>
+</td>
+<td>
+HelenaLC
+</td>
+<td>
+2020-10-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="t-sne-colored-by-plate-id-mt" class="section level2">
 <h2>t-SNE colored by plate ID &amp; %(MT)</h2>
 <pre class="r"><code>multiplot(cols = 2,
     plotTSNE(sce, colour_by = &quot;plate_id&quot;) + fix_lgd,
     plotTSNE(sce, colour_by = &quot;altexps_mt_percent&quot;) + fix_lgd)</code></pre>
-<p><img src="figure/0-preprocessing.Rmd/tsne-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p><img src="figure/0-preprocessing.Rmd/tsne-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-tsne-1">
+Past versions of tsne-1.png
+</button>
+</p>
+<div id="fig-tsne-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HelenaLC/Pummel_et_al-hand2_LPM/blob/b048d4d6ffdc4e257b2ed6ddbbea0652e0f0f38b/docs/figure/0-preprocessing.Rmd/tsne-1.png" target="_blank">b048d4d</a>
+</td>
+<td>
+HelenaLC
+</td>
+<td>
+2020-10-27
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<div id="write-sce-to-.rds" class="section level1">
-<h1>Write SCE to .rds</h1>
-<div id="mcherry-expression" class="section level3">
-<h3>mCherry expression</h3>
+</div>
+</div>
+<div id="save-data" class="section level1">
+<h1>Save data</h1>
+<div id="mcherry-expression" class="section level2">
+<h2>mCherry expression</h2>
 <pre class="r"><code>plotExpression(sce, 
     features = &quot;drl-mCherry:NA&quot;, x = &quot;plate_id&quot;, 
     colour_by = &quot;plate_id&quot;, show_median = TRUE) + fix_lgd</code></pre>
-<p><img src="figure/0-preprocessing.Rmd/unnamed-chunk-13-1.png" width="576" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># exlude plate 4 as it seems to be of low quality
+<p><img src="figure/0-preprocessing.Rmd/unnamed-chunk-14-1.png" width="480" style="display: block; margin: auto;" /></p>
+</div>
+<div id="write-sce-to-.rds" class="section level2">
+<h2>Write SCE to .rds</h2>
+<pre class="r"><code># exclude low-quality plate 4
 sce &lt;- sce[, sce$plate_id != &quot;SN4&quot;]
-saveRDS(sce, file.path(&quot;output&quot;, &quot;sce_prep.rds&quot;))</code></pre>
+saveRDS(sce, file.path(&quot;output&quot;, &quot;0-sce_prep.rds&quot;))</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -873,7 +1187,7 @@ footer is added to webpages before the MathJax javascript. -->
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -897,6 +1211,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {
@@ -908,7 +1227,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2,h3",
+      selectors: "h1,h2",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {

@@ -8,6 +8,7 @@
 data/*
 output/*
 figures/*
+backup
 analysis/figure
 analysis/*png
 analysis/*html
