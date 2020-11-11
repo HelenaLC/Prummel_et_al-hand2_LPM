@@ -7,7 +7,7 @@
 *html
 data/*
 output/*
-figures/*
+figures/*.pdf
 backup
 analysis/figure
 analysis/*png
