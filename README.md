@@ -46,8 +46,6 @@ figures | stores all visual outputs of `analysis/*.Rmd` scripts (as `.pdf`)
 docs | stores all `.html` (and other) outputs to generate the website
 `_workflowr.yml` | mainly used to set a seed for consistent <br> random number generation across all analyses
 
-***
-
 ### `/code`
 
 `utils.R`
