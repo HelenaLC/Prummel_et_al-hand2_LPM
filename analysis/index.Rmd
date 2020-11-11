@@ -7,29 +7,24 @@ output:
 ---
 
 - [Preprocessing](0-preprocessing.html):
-    - Calculation of QC metrics & outlier removal using `scater`
-    - Filtering of genes and cells
+    - Retrieval of gene symbols from Ensembl
+    - Calculation of QC metrics, including mitochondrial content 
+    - Removal of outliers using `scater`
+    - Computation of log-transformed library-size normalized counts
+    - Removal of low-quality plate 4
     
 - [Clustering](1-clustering.html):
     - `Seurat` clustering using a sequence of resolutions
     - Number of clusters by resolution
+    - `clustree` to investigate stability of clusters
     - t-SNE and UMAP dimension reductions 
-    - Identification of marker genes
+    - Dot plot of canonical marker genes
+    - DGEA using `Seurat`'s `FindAllMarkers`
+    - Dot plot & heatmap of DE genes
     
 - [Annotation](2-annotation.html):
-    - Dimension reductions colored by cluster ID
-    - UMAPs colored by marker gene expression
-    - Dot plot & heatmap of `Seurat` & canonical markers
-    - DE analysis on merged hand2+
-    
-- [Hand2(+)-subset](3-hand2.html)
-    - Re-clustering of hand2(+)-subset
-    - Dot plots of canonical & `Seurat` markers
-    - Violin plots of `Seurat` markers
-    - t-SNE and UMAP dimension reductions
-    - Classification tree
-    
-- [Bloodvessel](4-bloodvessel.html)
-    - Re-clustering of bloodvessel-subset
-    - PCA and UMAP dimension reductions
-    - Dot plot & violins of cannonical markers
+    - manual annotation of 15 `Seurat` clusters into 6 major subpopulations
+    - UMAP colored by manual annotation ID
+    - UMAPs, dot plots & heatmaps of canonical markers & hox genes
+    - DE analysis on super-cluster of merged hand2+ clusters
+    - Dot plot of hand2+ super-cluster markers

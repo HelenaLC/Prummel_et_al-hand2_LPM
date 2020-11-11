@@ -2,11 +2,6 @@
 title: "Annotation"
 author: "Helena L. Crowell"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
-output: 
-  html_document:
-    toc: true
-    toc_depth: 2
-    code_folding: hide
 ---
 
 ```{r setup, include = FALSE}
@@ -14,7 +9,9 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, cache.lazy = FALSE)
 ```
 
-### Load packages
+# Preamble
+
+## Load packages
 
 ```{r load-libs, message = FALSE, warning = FALSE}
 library(circlize)
@@ -31,32 +28,32 @@ library(SingleCellExperiment)
 library(tidyr)
 ```
 
-### Load data & metadata
+## Load data
 
 ```{r load-data}
-sce <- readRDS(file.path("output", "sce_clust.rds"))
-so <- readRDS(file.path("output", "so_clust.rds"))
-nk <- length(kids <- levels(sce$cluster_id))
-source(file.path("code", "utils.R"))
+sce <- readRDS(file.path("output", "1-sce_clust.rds"))
+so <- readRDS(file.path("output", "1-so_clust.rds"))
 
-mgs_canonical
-m <- match(mgs_canonical, rowData(sce)$symbol)
+source(file.path("code", "utils.R"))
+mgs_canonical 
+
+m <- match(mgs_canonical, rowData(sce)$symbol, nomatch = 0)
 gs <- rownames(sce)[m]
-gs <- gs[!is.na(gs)]
 ```
 
-### Cluster annotation
+## Annotation
 
 ```{r anno}
 # load cluster annotations
 anno <- read_xlsx(file.path("data", "cluster_anno.xlsx"))
 anno <- setNames(anno$label, anno$cluster_id)
 anno <- anno[as.character(sce$cluster_id)]
+# set cluster IDs to manual annotation assignments
 Idents(so) <- sce$cluster_id <- droplevels(
     factor(anno, levels = names(cluster_pal)))
 ```
 
-# Dimension reduction
+## Prep. data
 
 ```{r}
 # scale expression between 0 and 1 using
@@ -68,12 +65,13 @@ es <- .scale(logcounts(sce))
 dr <- do.call(cbind, reducedDims(sce))
 df <- data.frame(t(es), dr, colData(sce), 
     i = seq_len(ncol(sce)), check.names = FALSE)
-df <- df[sample(nrow(df), nrow(df)), ] # randomize cell ordering
+# randomize cell ordering
+df <- df[sample(nrow(df), nrow(df)), ] 
 ```
 
-## Colored by cluster ID
+# Dim. red.
 
-```{r umap-cluster_id, fig.width = 6, fig.height = 4}
+```{r umap-cluster_id, fig.width = 5, fig.height = 3}
 # plot UMAP colored by cluster ID
 (p <- ggplot(df, aes(x = UMAP_1, y = UMAP_2, col = cluster_id)) +
     geom_point(size = 0.8, alpha = 0.8) + 
@@ -82,15 +80,17 @@ df <- df[sample(nrow(df), nrow(df)), ] # randomize cell ordering
     theme_void() + theme(aspect.ratio = 1))
 ```
 
-```{r umap-expr, echo = FALSE}
+```{r save-umap-cluster_id, echo = FALSE}
 p <- p + theme_void(base_size = 8) + theme(legend.key.height = unit(2, "mm"))
 ggsave(file.path("figures", "umap-cluster_id.pdf"), p,
     width = 12, height = 8, units = "cm", useDingbats = FALSE)
 ```
 
-## Colored by expression
+# Canonical markers
 
-```{r fig.width = 12, fig.height = 14}
+## Dim. red.
+
+```{r umap-mgs, fig.width = 12, fig.height = 14}
 ps <- lapply(gs, function(g) { df$expr <- df[, g]
     ggplot(df, aes(x = UMAP_1, y = UMAP_2, col = expr)) +
         geom_point(size = 0.8, alpha = 0.8) + 
@@ -101,7 +101,7 @@ ps <- lapply(gs, function(g) { df$expr <- df[, g]
 plot_grid(plotlist = ps, ncol = 5)
 ```
 
-```{r echo = FALSE, message = FALSE}
+```{r save-umap-mgs, echo = FALSE, results = "hide"}
 p <- ps[[1]] +  theme(legend.key.height = unit(3, "mm")) +
     scale_color_viridis_c("scaled\nexpression", option = "C", limits = c(0,1))
 lgd <- get_legend(p)
@@ -116,41 +116,13 @@ plot_grid(plotlist = ps, lgd, ncol = 5)
 dev.off()
 ```
 
-```{r echo = FALSE, message = FALSE}
-fs <- c("meis2b", "meis3", "foxh1", "sfrp5", "gata4", "gata5", "gata6")
-m <- match(fs, rowData(sce)$symbol, nomatch = 0)
-ps <- lapply(rownames(sce)[m], function(g) { 
-    df$expr <- df[, g]
-    ggplot(df, aes(x = UMAP_1, y = UMAP_2, col = expr)) +
-        geom_point(size = 0, alpha = 0.8) + 
-        scale_color_viridis_c(NULL, option = "C") +
-        ggtitle(g) + theme_void(base_size = 6) + 
-        theme(aspect.ratio = 1, 
-            legend.position = "none",
-            plot.title = element_text(size = 5))
-})
-pdf(file.path("figures", "umap-more_genes.pdf"), 
-    width = 8/2.54, height = 6/2.54)
-plot_grid(plotlist = ps, ncol = 3)
-dev.off()
-```
-
-# Canonical marker genes
-
 ## Dot plot
 
-```{r dotplot, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 4}
+```{r dotplot-mgs, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 4}
 (p <- .dotplot(so, gs))
-p <- p + scale_size_continuous(range = c(0, 3)) + 
-    theme_minimal(base_size = 8) + theme(
-        legend.key.size = unit(3, "mm"),
-        panel.grid = element_blank(),
-        axis.title = element_blank(),
-        axis.text = element_text(color = "black"),
-        axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-```{r echo = FALSE, message = FALSE}
+```{r save-dotplot-mgs, echo = FALSE, message = FALSE}
 p <- p + scale_size_continuous(range = c(0, 3)) + 
     theme_minimal(base_size = 8) + theme(
         legend.key.size = unit(3, "mm"),
@@ -162,24 +134,44 @@ ggsave(file.path("figures", "dotplot-canonical_markers.pdf"),
     width = 15, height = 6, units = "cm", useDingbats = FALSE)
 ```
 
+# Other markers
+
+```{r umap-other, fig.width = 6, fig.height = 4}
+fs <- c("meis2b", "meis3", "foxh1", "sfrp5", "gata5", "gata6")
+m <- match(fs, rowData(sce)$symbol)
+ps <- lapply(rownames(sce)[m], function(g) { 
+    df$expr <- df[, g]
+    ggplot(df, aes(x = UMAP_1, y = UMAP_2, col = expr)) +
+        geom_point(size = 0, alpha = 0.8) + 
+        scale_color_viridis_c(NULL, option = "C") +
+        ggtitle(g) + theme_void(base_size = 6) + 
+        theme(aspect.ratio = 1, 
+            legend.position = "none",
+            plot.title = element_text(size = 5))
+})
+(p <- plot_grid(plotlist = ps, ncol = 3))
+```
+
+```{r save-umap-other, echo = FALSE, results = "hide"}
+pdf(file.path("figures", "umap-more_genes.pdf"), 
+    width = 8/2.54, height = 6/2.54)
+p; dev.off()
+```
+
 # hox genes
 
-```{r hox-load-data}
-hox <- read.table(
-    file.path("data", "hox_genes.txt"), 
-    colClasses = "character")[[1]]
-
-m <- match(hox, rowData(sce)$symbol)
-gs <- rownames(sce)[m]
+```{r get-hox-genes}
+is_hox <- grepl("hox", rowData(sce)$symbol)
+hox_gs <- rownames(sce)[is_hox]
 ```
 
 ## Dot plot
 
-```{r hox-dotplot, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 4}
-(p <- .dotplot(so, gs))
+```{r dotplot-hox, warning = FALSE, message = FALSE, fig.width = 8, fig.height = 5}
+(p <- .dotplot(so, hox_gs))
 ```
 
-```{r echo = FALSE, warning = FALSE, message = FALSE}
+```{r save-dotplot-hox, echo = FALSE, warning = FALSE, message = FALSE}
 p <- p + scale_size_continuous(range = c(0, 3)) + 
     theme_minimal(base_size = 8) + theme(
         legend.key.size = unit(3, "mm"),
@@ -191,10 +183,10 @@ ggsave(file.path("figures", "dotplot-hox_genes.pdf"),
     width = 12, height = 6, units = "cm", useDingbats = FALSE)
 ```
 
-## Dimension reduction
+## Dim. red.
 
-```{r hox-dimred, fig.width = 14, fig.height = 6}
-ps <- lapply(gs, function(g) { df$expr <- df[, g]
+```{r umap-hox, fig.width = 16, fig.height = 7}
+ps <- lapply(hox_gs, function(g) { df$expr <- df[, g]
     ggplot(df, aes(x = UMAP_1, y = UMAP_2, col = expr)) +
         geom_point(size = 0.8, alpha = 0.8) + 
         scale_color_viridis_c(NULL, option = "C") +
@@ -204,7 +196,7 @@ ps <- lapply(gs, function(g) { df$expr <- df[, g]
 plot_grid(plotlist = ps, ncol = 7)
 ```
 
-```{r echo = FALSE, message = FALSE}
+```{r save-umap-hox, echo = FALSE, results = "hide"}
 ps <- lapply(ps, function(p) {
     p$layers[[1]]$aes_params$size <- 0
     p + theme(plot.title = element_text(size = 5),
@@ -216,9 +208,9 @@ plot_grid(plotlist = ps, ncol = 7)
 dev.off()
 ```
 
-# hand2+ marker genes
+# hand2+ markers
 
-## Cluster merging
+## Merging
 
 ```{r merging}
 # merge into super-clusters
@@ -257,7 +249,7 @@ length(mgs <- df$gene)
 
 ## Heatmap
 
-```{r mgs-heatmap, fig.width = 10, fig.height = 5}
+```{r heatmap-mgs, fig.width = 8, fig.height = 3}
 # compute mean expression by cluster
 names(mids) <- mids <- levels(sub$merging_id)
 cs <- split(seq_len(ncol(sub)), sub$merging_id)
@@ -306,17 +298,16 @@ hm_pal <- colorRamp2(seq(-rng, rng, l = 5), hm_pal)
     row_names_gp = gpar(fontsize = 8),
     column_names_gp = gpar(fontsize = 8)))
 ```
-```{r echo = FALSE}
+
+```{r save-heatmap-mgs, echo = FALSE}
 hm <- grid.grabExpr(draw(hm))
 fn <- file.path("figures", "heatmap-hand2_mgs.pdf")
 ggsave(fn, hm, width = 24, height = 6, units = "cm")
 ```
 
-### Save outputs
+# Save data
 
-```{r}
-so <- AddMetaData(so, sce$cluster_id, "cluster_id") 
-saveRDS(so, file.path("output", "so_anno.rds"))
-saveRDS(sce, file.path("output", "sce_anno.rds"))
+```{r save-data}
+saveRDS(so, file.path("output", "2-so_anno.rds"))
+saveRDS(sce, file.path("output", "2-sce_anno.rds"))
 ```
-

@@ -2,11 +2,6 @@
 title: "Clustering"
 author: "Helena L. Crowell"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
-output: 
-  html_document:
-    toc: true
-    toc_depth: 2
-    code_folding: hide
 ---
 
 ```{r setup, include = FALSE}
@@ -14,7 +9,9 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 knitr::opts_chunk$set(cache = TRUE, autodep = TRUE, cache.lazy = FALSE)
 ```
 
-### Load packages
+# Preamble
+
+## Load packages
 
 ```{r load-libs, message = FALSE, warning = FALSE}
 library(clustree)
@@ -26,21 +23,22 @@ library(Seurat)
 library(SingleCellExperiment)
 ```
 
-### Load data
+## Load data
 
 ```{r load-data}
-sce <- readRDS(file.path("output", "sce_prep.rds"))
+sce <- readRDS(file.path("output", "0-sce_prep.rds"))
 source(file.path("code", "utils.R"))
 ```
 
 # Clustering
 
-```{r Seurat, message = FALSE, fig.width = 5, fig.height = 3}
+```{r Seurat, message = FALSE, fig.width = 4, fig.height = 3}
 # create `SeuratObject`
 so <- CreateSeuratObject(
-    counts = assay(sce, "counts"), project = "LPM",
+    counts = assay(sce, "counts"), 
     min.cells = 10, min.features = 200,
-    meta.data = as.data.frame(colData(sce)))
+    meta.data = as.data.frame(colData(sce)),
+    project = "Pummel_et_al-hand2_LPM")
 
 # normalize, find HVGs, scale & run PCA
 so <- NormalizeData(so)
@@ -55,25 +53,25 @@ so <- FindClusters(so,
     verbose = FALSE, random.seed = 0)
 ```
 
-### Nb. of clusters by resolution
+## Nb. of clusters by resolution
 
-```{r fig.width = 5, fig.height = 3}
+```{r fig.width = 4, fig.height = 3}
 ks <- grep("res.[0-9]", names(so@meta.data), value = TRUE)
 df <- data.frame(
-  res = as.numeric(gsub(".*res.(.*)", "\\1", ks)),
-  nk = vapply(so@meta.data[, ks], nlevels, numeric(1)))
+    res = as.numeric(gsub(".*res.(.*)", "\\1", ks)),
+    nk = vapply(so@meta.data[, ks], nlevels, numeric(1)))
 
 ggplot(df, aes(x = res, y = nk)) + 
-  geom_point() + 
-  scale_x_continuous(breaks = df$res) + 
-  scale_y_continuous(breaks = df$nk) +
-  labs(x = "resolution", y = "# of clusters") +
-  theme_bw() + theme(panel.grid.minor = element_blank())
+    geom_point() + 
+    scale_x_continuous(breaks = df$res) + 
+    scale_y_continuous(breaks = df$nk) +
+    labs(x = "resolution", y = "# of clusters") +
+    theme_bw() + theme(panel.grid.minor = element_blank())
 ```
 
-### Clustering tree
+## Clustering tree
 
-```{r clustree, fig.width = 10, fig.asp = 1}
+```{r clustree, fig.width = 8, fig.asp = 1}
 clustree(so@meta.data, prefix = "RNA_snn_res.")
 ```
 
@@ -101,24 +99,24 @@ plot_grid(nrow = 1, rel_widths = c(3, 3, 2),
 ## Canonical marker genes
 
 ```{r mgs1}
-mgs_canonical
+mgs_canonical # these were read in by utils.R (sourced above)
 m <- match(mgs_canonical, rowData(sce)$symbol, nomatch = 0)
 gs <- rownames(sce)[m]
 ```
 
 ### Dot plot
 
-```{r dp1, fig.width = 10, fig.asp = 1/2}
+```{r dp1, fig.width = 9, fig.asp = 1/2}
 DotPlot(so, features = gs) + 
+    scale_x_discrete(labels = gsub(".*:", "", gs)) +
     RotatedAxis() + coord_cartesian(clip = "off") +
-    theme(plot.margin = unit(c(0,0,0,4), "cm")) +
-    labs(x = NULL, y = NULL)
+    labs(x = NULL, y = NULL) 
 ```
 
 ### Heatmap
 
-```{r hm1, fig.width = 12, fig.asp = 2/3}
-DoHeatmap(so, gs)
+```{r hm1, fig.width = 10, fig.asp = 2/3}
+DoHeatmap(so, gs) + scale_y_discrete(labels = gsub(".*:", "", rev(gs))) 
 ```
 
 ## DE analysis with `Seurat` 
@@ -126,29 +124,31 @@ DoHeatmap(so, gs)
 ```{r mgs2}
 mgs <- FindAllMarkers(so, random.seed = 0, verbose = FALSE)
 gs <- group_by(mgs, cluster) %>% 
-    dplyr::slice(seq_len(4)) %>% 
-    pull("gene") %>% unique
+    slice_head(n = 4) %>% 
+    pull("gene") %>% 
+    unique
 ```
 
 ### Dot plot
 
-```{r dp2, fig.width = 16, fig.asp = 2/3}
+```{r dp2, fig.width = 15, fig.asp = 1/2}
 DotPlot(so, features = gs) + 
-    RotatedAxis() + coord_cartesian(clip = "off") +
-    theme(plot.margin = unit(c(0,0,0,4), "cm")) +
-    labs(x = NULL, y = NULL)
+    scale_x_discrete(labels = function(u)
+        ifelse(!grepl(":\\w", u), u, gsub(".*:", "", u))) +
+    RotatedAxis() + labs(x = NULL, y = NULL)
 ```
 
 ### Heatmap
 
-```{r hm2, warning = FALSE, fig.width = 12, fig.asp = 2/3}
-DoHeatmap(so, gs)
+```{r hm2, warning = FALSE, fig.width = 10, fig.asp = 2/3}
+DoHeatmap(so, gs) + scale_y_discrete(labels = function(u)
+    ifelse(!grepl(":\\w", u), u, gsub(".*:", "", u)))
 ```
 
-### Save outputs
+# Save data
 
 ```{r save}
-# propagate rowData from SCE to SeuratObject
+# propagate 'rowData' from SCE to 'SeuratObject'
 rd <- as.data.frame(rowData(sce)[rownames(so), ])
 so[["RNA"]]@meta.features <- cbind(rd, so[["RNA"]]@meta.features)
 
@@ -157,9 +157,8 @@ sce <- as.SingleCellExperiment(so)
 table(sce$cluster_id <- Idents(so))
 
 # write out files
-saveRDS(so, file.path("output", "so_clust.rds"))
-saveRDS(sce, file.path("output", "sce_clust.rds"))
-write.csv(mgs, file.path("output", "mgs_Seurat.csv"))
+saveRDS(so, file.path("output", "1-so_clust.rds"))
+saveRDS(sce, file.path("output", "1-sce_clust.rds"))
 ```
 
 

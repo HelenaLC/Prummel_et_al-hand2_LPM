@@ -55,7 +55,7 @@ cluster_pal <- c(
         guides(size = guide_legend("expression\nfrequency"),
             color = guide_colorbar("scaled mean\nexpression", order = 1)) +
         coord_equal() + theme_void() + theme(
-            axis.text.x = element_text(angle = 45, hjust = 1),
+            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
             axis.text.y = element_text(hjust = 1))
 }
         

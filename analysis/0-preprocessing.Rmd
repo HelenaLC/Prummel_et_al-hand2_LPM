@@ -123,7 +123,7 @@ plotColData(sce, x = "plate_id", y = "altexps_mt_percent",
 
 ### Highest expressing features
 
-```{r fig.width = 6, fig.height = 4}
+```{r fig.width = 6, fig.height = 5}
 plotHighestExprs(sce, colour_cells_by = "detected")
 ```
 
@@ -139,7 +139,7 @@ sce <- logNormCounts(sce)
 
 ### Expression frequency vs. mean
 
-```{r message = FALSE, fig.width = 6, fig.height = 4}
+```{r message = FALSE, fig.width = 5, fig.height = 3}
 rowData(sce)$mean_expr <- rowMeans(logcounts(sce))
 rowData(sce)$is_mt <- rownames(sce) %in% mt
 plotRowData(sce, x = "mean_expr", y = "detected", colour_by = "is_mt") +
@@ -167,7 +167,7 @@ sce <- runTSNE(sce)
 sce$log10_total <- log10(sce$total + 1)
 multiplot(cols = 2,
     plotPCA(sce, colour_by = "plate_id") + fix_lgd,
-    plotPCA(sce, colour_by = "log10_total") + fix_lgd)
+    plotPCA(sce, colour_by = "log10_total"))
 ```
 
 ## t-SNE colored by plate ID & %(MT)
@@ -175,7 +175,7 @@ multiplot(cols = 2,
 ```{r tsne, fig.width = 10, fig.height = 4}
 multiplot(cols = 2,
     plotTSNE(sce, colour_by = "plate_id") + fix_lgd,
-    plotTSNE(sce, colour_by = "altexps_mt_percent") + fix_lgd)
+    plotTSNE(sce, colour_by = "altexps_mt_percent"))
 ```
 
 # Save data
