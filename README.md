@@ -3,9 +3,34 @@ This repository contains all code necessary to reproduce all analyses and figure
 > **Hand2 delineates mesothelium progenitors and is reactivated in mesothelioma**  
 *Prummel KD, Crowell HL, Nieuwenhuize S, Brombacher EC, Daetwyler S, Soneson C, Kresoja-Rakic J, Ronner M, Kocere A, Ernst A, Labbaf Z, Clouthier DE, Firulli AB, Sánchez-Iranzo H, O’Rourke R, Raz E, Mercader N, Burger A, Felley-Bosco E, Huisken J, Robinson MD & Mosimann C*
 
-A browesable `workflowr` website of the analysis can be viewed [HERE](https://htmlpreview.github.io/?https://github.com/HelenaLC/Pummel_et_al-hand2_LPM/blob/master/docs/index.html).
+A browesable `workflowr`<sup>[1](#f1)</sup> website of the analysis can be viewed [HERE](https://htmlpreview.github.io/?https://github.com/HelenaLC/Pummel_et_al-hand2_LPM/blob/master/docs/index.html).
 
-***
+## Prerequisites
+
+The code in this repository was developed using **R v4.0.2** and **Bioconductor v3.11**. For installation of the required libraries, we'll fist install the `r BiocStyle::Biocpkg("BiocManager")` package:
+
+```r
+install.packages("BiocManager")
+```
+
+Versions of R and Bioconductor that are currently being run should be checked via:
+
+```r
+version
+BiocManager::version()
+```
+
+Finally, the code chunk below will install all package dependencies:
+
+```r
+pkgs <- c("biomaRt", "circlize", "clustree", "ComplexHeatmap", 
+    "cowplot", "dplyr", "ggplot2", "matrixStats", "RColorBrewer", 
+    "readxl", "reshape2", "scater", "scran", "scales", 
+    "SingleCellExperiment", "Seurat", "tidyr", "viridis")
+BiocManager::install(pkgs, ask = FALSE)
+```
+
+## Contents
 
 It follows a brief description of the directories and scripts contained herein. The contents of each `analysis/*.Rmd` script may be viewed on the landing page of the `workflowr` website (link above), but are still included here for completeness.
 
@@ -42,8 +67,6 @@ and plate IDs and barcodes as column names, separated by "_"
 - generates Figure 7B heatmap of bulk RNA-seq data of LPM-associated genes,  
 up- (Msln, Wt1) or downregulated (Nf2, Bap1) mesothelioma genes, and neg. control (Tubb4a) 
 
-***
-
 ### `/analysis`
 
 `index.Rmd`  
@@ -67,3 +90,10 @@ up- (Msln, Wt1) or downregulated (Nf2, Bap1) mesothelioma genes, and neg. contro
 - manual annotation of 15 `Seurat` clusters into 6 major subpopulations
 - dot plots, heatmaps & UMAPs of canonical markers & hox genes
 - DE analysis on hand2+ super-cluster merging hand2+ subpopulations
+
+## References
+
+<a name="f1">[1]</a>:
+John Blischak, Peter Carbonetto and Matthew Stephens (2019).  
+workflowr: A Framework for Reproducible and Collaborative Data Science.  
+R package version 1.4.0. https://CRAN.R-project.org/package=workflowr
