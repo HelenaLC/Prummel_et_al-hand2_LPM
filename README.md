@@ -21,6 +21,8 @@ figures | stores all visual outputs of `analysis/*.Rmd` scripts (as `.pdf`)
 docs | stores all `.html` (and other) outputs to generate the website
 `_workflowr.yml` | mainly used to set a seed for consistent <br> random number generation across all analyses
 
+***
+
 ### `/code`
 
 `utils.R`
@@ -39,6 +41,8 @@ and plate IDs and barcodes as column names, separated by "_"
 
 - generates Figure 7B heatmap of bulk RNA-seq data of LPM-associated genes,  
 up- (Msln, Wt1) or downregulated (Nf2, Bap1) mesothelioma genes, and neg. control (Tubb4a) 
+
+***
 
 ### `/analysis`
 
