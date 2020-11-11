@@ -7,7 +7,7 @@ A browesable `workflowr` website of the analysis can be viewed [HERE](https://ht
 
 ***
 
-It follows a brief description of the directories and scripts contained herein. The contents of each `analysis/*.Rmd` script may be viewed on the landing page of the `workflowr` website (link above), but are also summarized here for completeness.
+It follows a brief description of the directories and scripts contained herein. The contents of each `analysis/*.Rmd` script may be viewed on the landing page of the `workflowr` website (link above), but are still included here for completeness.
 
 ### Subdirectories
 
