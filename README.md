@@ -1,7 +1,7 @@
 This repository contains all code necessary to reproduce all analyses and figures from our manuscript:
 
 > **Hand2 delineates mesothelium progenitors and is reactivated in mesothelioma**  
-*Prummel KD, Crowell HL, Nieuwenhuize S, Brombacher EC, Daetwyler S, Soneson C, Kresoja-Rakic J, Ronner M, Kocere A, Ernst A, Labbaf Z, Clouthier DE, Firulli AB, Sánchez-Iranzo H, O’Rourke R, Raz E, Mercader N, Burger A, Felley-Bosco E, Huisken J, Robinson MD & Mosimann C*
+*Prummel KD, Crowell HL, Nieuwenhuize S, Brombacher EC, Daetwyler S, Soneson C, Kresoja-Rakic J, Kocere A, Ronner M, Ernst A, Labbaf Z, Clouthier DE, Firulli AB, Sánchez-Iranzo H, Naganathan SR, O’Rourke R, Raz E, Mercader N, Burger A, Felley-Bosco E, Huisken J, Robinson MD & Mosimann C*
 
 A browesable `workflowr`<sup>[1](#f1)</sup> website of the analysis can be viewed [HERE](https://htmlpreview.github.io/?https://github.com/HelenaLC/Pummel_et_al-hand2_LPM/blob/master/docs/index.html).
 
